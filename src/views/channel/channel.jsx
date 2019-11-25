@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
-import "./channel.less"
-export default class Channel extends Component {
-    render() {
-        return (
-            <div className="channel">
-                Channel
-            </div>
-        )
+import React, { Component } from 'react';
+class Channel extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {  }
+    }
+    render() { 
+        return (<div></div> );
     }
 }
+ 
+export default Channel;

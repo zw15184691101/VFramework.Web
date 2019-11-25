@@ -6,14 +6,17 @@ import storageUtils from "../../utils/storageUtils"
 import { formateDate } from "../../utils/dateUtils";
 import menuList from "../../config/menuConfig";
 import "./header.less"
-import logo from "../../assets/images/logo192.png"
+import { reqWeather } from '../../api';
 class Header extends Component {
     constructor(){
         super()
         this.state = {
-            time:formateDate(Date.now())
+            time:formateDate(Date.now()),
+            dayPictureUrl:'',//天气图片地址
+            weather:''//天气文字
         }
     }
+
     /* 
     退出登陆
     */
@@ -51,6 +54,18 @@ class Header extends Component {
         })
         return title
     }
+    
+    /* 
+    获取天气信息
+    */
+    getWeather = async ()=>{
+        //发起请求并返回数据
+        const { dayPictureUrl,weather} = await reqWeather("东莞")
+        //更新状态
+        this.setState({
+            dayPictureUrl,weather
+        })
+    }
 
     componentDidMount(){
         //开启定时器
@@ -59,14 +74,17 @@ class Header extends Component {
                 time:formateDate(Date.now())
             })
         }, 1000);
+
+        //开启获取天气信息请求
+        this.getWeather()
     }
 
-    componentWillMount(){
+    UNSAFE_componentWillMount(){
         //关闭定时器
         clearInterval(this.timeId)
     }
     render() {
-        const {time} = this.state
+        const {time,dayPictureUrl,weather} = this.state
         const user = memoryUtils.user
         const title = this.getTitle()
         return (
@@ -79,8 +97,8 @@ class Header extends Component {
                     <div className="header-bottom-left"><span>{title}</span></div>
                     <div className="header-bottom-right">
                         <span>{time}</span>
-                        <img src={logo} alt="logo"/>
-                        <span>多云雷阵雨</span>
+                        <img src={dayPictureUrl} alt="logo"/>
+                        <span>{weather}</span>
                     </div>
                 </div>
             </div>
